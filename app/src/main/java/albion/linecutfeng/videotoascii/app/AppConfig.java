@@ -5,5 +5,4 @@ import android.os.Environment;
 public class AppConfig {
 
     public static final String BASE_PATH = Environment.getExternalStorageDirectory().getPath() + "/albion.linecutfeng.videotoascii";
-    public static final String PIC_LIST_PATH = BASE_PATH + "/picList";
 }

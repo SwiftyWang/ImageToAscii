@@ -9,6 +9,6 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Density.setDensity(this, 360);//360为UI提供设计图的宽度
+        Density.setDensity(this, 360);//360为UI提供设计图的宽度M
     }
 }

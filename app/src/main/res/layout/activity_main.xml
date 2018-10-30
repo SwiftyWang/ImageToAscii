@@ -94,24 +94,6 @@
                 android:max="100"
                 android:progressDrawable="@drawable/my_progressbar" />
 
-            <LinearLayout
-                android:id="@+id/layout_step2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="第三步：打散的图片合并成视频" />
-
-                <Button
-                    android:id="@+id/bt_mix"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="合成视频" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

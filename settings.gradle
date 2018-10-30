@@ -1,1 +1,1 @@
-include ':app', ':lowpoly'
+include ':app', ':lowpoly', ':asciimediaconverter'

@@ -191,7 +191,7 @@ public native static int run(String[] commands);
 ```
 本地方法如下
 ```c
-JNIEXPORT jint JNICALL Java_codepig_ffmpegcldemo_FFmpegKit_run
+JNIEXPORT jint JNICALL Java_com_swifty_asciimediaconverter_video_FFmpegKit_run
 (JNIEnv *env, jclass obj, jobjectArray commands){
     //FFmpeg av_log() callback
     int argc = (*env)->GetArrayLength(env, commands);
