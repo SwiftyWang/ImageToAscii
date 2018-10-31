@@ -47,8 +47,8 @@ videoConverter
 <h3>More APIs are developing...</h3>
 
 <h3>Ref repo:</h3>
-https://github.com/meiniepan/Pic2Ascii
-https://github.com/GodFengShen/PicOrVideoToAscii
+<p>https://github.com/meiniepan/Pic2Ascii</p>
+<p>https://github.com/GodFengShen/PicOrVideoToAscii</p>
 
 # VideoToAscii
 ### Android picture or video to ascii pic or video.
