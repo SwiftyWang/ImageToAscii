@@ -44,7 +44,7 @@ videoConverter
         })
 ```
 
-<h3>More api is developing...</h3>
+<h3>More APIs are developing...</h3>
 
 
 # VideoToAscii
