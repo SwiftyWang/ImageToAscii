@@ -12,7 +12,8 @@ public class VideoConvertRequest extends ConvertRequest {
     private String mDesFolder;
     private int mFps = 5;
     private ConvertedFileType mConvertedFileType = ConvertedFileType.GIF;
-    private int mSampleSize = 7 ;
+    // hardcode it to 7, seems this value cannot be changed.
+    private int mSampleSize = 7;
 
     private VideoConvertRequest(Context context) {
         mContext = context;
@@ -72,11 +73,6 @@ public class VideoConvertRequest extends ConvertRequest {
 
         public Builder setConvertedFileType(ConvertedFileType convertedFileType) {
             mConvertRequest.mConvertedFileType = convertedFileType;
-            return this;
-        }
-
-        public Builder setSampleSize(int sampleSize) {
-            mConvertRequest.mSampleSize = sampleSize;
             return this;
         }
     }

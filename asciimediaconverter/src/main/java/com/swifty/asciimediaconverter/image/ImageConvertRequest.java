@@ -11,6 +11,8 @@ import com.swifty.asciimediaconverter.base.ConvertRequest;
 public final class ImageConvertRequest extends ConvertRequest {
 
     private final Context mContext;
+
+    // hardcode it to 7, seems this value cannot be changed.
     private int mSampleSize = 7;
 
     private Bitmap mBitmap;
@@ -35,11 +37,6 @@ public final class ImageConvertRequest extends ConvertRequest {
 
         public Builder(Context context) {
             super(new ImageConvertRequest(context));
-        }
-
-        public Builder setSampleSize(int sampleSize) {
-            mConvertRequest.mSampleSize = sampleSize;
-            return this;
         }
 
         public Builder setOriginBitmap(Bitmap bitmap) {

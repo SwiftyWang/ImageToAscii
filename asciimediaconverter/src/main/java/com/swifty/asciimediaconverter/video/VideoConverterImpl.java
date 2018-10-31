@@ -65,8 +65,7 @@ public class VideoConverterImpl implements VideoConverter {
                     Log.i("icv", "第" + i + "张转换开始");
                     ImageConverter imageConverter = new ImageConverterImpl();
                     ImageConvertRequest.Builder builder = new ImageConvertRequest.Builder(context);
-                    builder.setSampleSize(convertRequest.getSampleSize())
-                            .setOriginBitmap(bitmap);
+                    builder.setOriginBitmap(bitmap);
                     ImageConvertResponse imageConvertResponse = imageConverter.convertSync(builder.build());
                     Log.i("icv", "第" + i + "张转换结束");
 
