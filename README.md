@@ -1,3 +1,48 @@
+<h2>This lib is convert an image or video to ascii image/video/gif</h2>
+<h3>How to use</h3>
+```java
+    ImageConverter imageConverter = new ImageConverterImpl();
+        ImageConvertRequest.Builder builder = new ImageConvertRequest.Builder(this);
+        builder.setFilePath(path);
+        imageConverter
+                .convertRx(builder.build())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ImageConvertResponse>() {
+                    @Override
+                    public void accept(ImageConvertResponse imageConvertResponse) throws Exception {
+                        Bitmap bitmap = imageConvertResponse.getResponse();
+                    }
+                })
+                                
+    VideoConverter videoConverter = new VideoConverterImpl();
+    VideoConvertRequest.Builder builder = new VideoConvertRequest.Builder(MainActivity.this);
+    builder
+            .setConvertedFileType(VideoConvertRequest.ConvertedFileType.GIF)
+            .setFilePath(mediaPath)
+            .setDesFolder(AppConfig.BASE_PATH)
+            .setFps(fps);
+    videoConverter
+            .convertRx(builder.build())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<VideoConvertResponse>() {
+                @Override
+                public void accept(VideoConvertResponse videoConvertResponse) throws Exception {
+                    if (videoConvertResponse.isComplete()) {
+                        progressBar.setProgress(100);
+                    } else {
+                        progressBar.setProgress((int) (videoConvertResponse.getProgress() * 100));
+                    }
+                }
+            }, new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    Log.e(TAG, throwable.toString(), throwable);
+                }
+            })
+```
+<h3>More api is developing...</h3>
+
+
 # VideoToAscii
 ### Android picture or video to ascii pic or video.
 简书：https://www.jianshu.com/p/a14f1ac558e1
