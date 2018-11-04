@@ -53,7 +53,7 @@ public class VideoConverterImpl implements VideoConverter {
                         e.printStackTrace();
                     }
                 }
-                String tempPicFolder = desFolder + "/.pic/";
+                String tempPicFolder = desFolder + ".pic/";
                 Utils.mkdirs(tempPicFolder);
                 for (int i = 0; i < encodeTotalCount; i++) {
                     Log.i("icv", "第" + i + "张解码开始");
@@ -86,24 +86,30 @@ public class VideoConverterImpl implements VideoConverter {
                 }
 
                 // encode images to video
-                String desVideoPath = ffmpegMerge(tempPicFolder, convertRequest);
-
-                VideoConvertResponse.CompleteModel completeModel = new VideoConvertResponse.CompleteModel();
-                completeModel.filePath = desVideoPath;
-                VideoConvertResponse videoConvertResponse = new VideoConvertResponse(true, 1, null, completeModel);
+                String desVideoPath = generateDesVideoPath(desFolder, convertRequest);
+                int result = ffmpegMerge(tempPicFolder + TEMP_IMAGE_PREFIX + "%05d.png", desVideoPath, convertRequest.getFps());
                 Utils.deleteDir(tempPicFolder);
-                emitter.onNext(videoConvertResponse);
-                emitter.onComplete();
+                if (result == 0) {
+                    VideoConvertResponse.CompleteModel completeModel = new VideoConvertResponse.CompleteModel();
+                    completeModel.filePath = desVideoPath;
+                    VideoConvertResponse videoConvertResponse = new VideoConvertResponse(true, 1, null, completeModel);
+                    emitter.onNext(videoConvertResponse);
+                    emitter.onComplete();
+                } else {
+                    emitter.onError(new RuntimeException("FFmpeg return error with error code:" + result));
+                }
             }
         }).subscribeOn(Schedulers.computation());
         return observable;
     }
 
-    private String ffmpegMerge(String picFolder, VideoConvertRequest videoConvertRequest) {
-        int fps = videoConvertRequest.getFps();
-        VideoConvertRequest.ConvertedFileType convertedFileType = videoConvertRequest.getConvertedFileType();
-        String desFolder = videoConvertRequest.getDesFolder();
-        File file = new File(videoConvertRequest.getFilePath());
+    private int ffmpegMerge(String picsPath, String desPath, int fps) throws Exception {
+        String[] commands = FFmpegCommandCentre.concatVideo(picsPath, desPath, String.valueOf(fps));
+        return FFmpegKit.execute(commands);
+    }
+
+    private String generateDesVideoPath(String desFolder, VideoConvertRequest convertRequest) {
+        File file = new File(convertRequest.getFilePath());
         String fileName;
         if (file.exists()) {
             fileName = file.getName();
@@ -115,10 +121,7 @@ public class VideoConverterImpl implements VideoConverter {
         if (i != -1 && i != 0) {
             fileName = fileName.substring(0, i);
         }
-        final String videoName = fileName + "." + convertedFileType.getExtension();
-        String desVideoPath = desFolder + videoName;
-        String[] commands = FFmpegCommandCentre.concatVideo(picFolder, desVideoPath, String.valueOf(fps));
-        FFmpegKit.execute(commands);
-        return desVideoPath;
+        final String videoName = fileName + "." + convertRequest.getConvertedFileType().getExtension();
+        return desFolder + videoName;
     }
 }

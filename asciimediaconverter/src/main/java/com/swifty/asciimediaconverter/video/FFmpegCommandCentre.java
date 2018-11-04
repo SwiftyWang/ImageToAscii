@@ -91,7 +91,7 @@ public class FFmpegCommandCentre {
             _commands.add("-framerate");
             _commands.add(fps);
             _commands.add("-i");
-            _commands.add(_filePath+"/test%05d.png");
+            _commands.add(_filePath);
 //            _commands.add("-filter_complex");
 //            _commands.add("[1:v]scale=1920:1080[s];[0:v][s]overlay=0:0");
             _commands.add("-b");
