@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Layout;
-import android.text.SpannableString;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -15,6 +15,9 @@ import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
@@ -79,7 +82,8 @@ public class ImageConverterImpl implements ImageConverter {
         bitmap = Bitmap.createScaledBitmap(bitmap, width1, height1, true);
 
         //输出到指定文件中
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        List<Integer> colors = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int y = 0; y < bitmap.getHeight(); y += 2) {
             for (int x = 0; x < bitmap.getWidth(); x++) {
                 final int pixel = bitmap.getPixel(x, y);
@@ -87,15 +91,17 @@ public class ImageConverterImpl implements ImageConverter {
                 final float gray = 0.299f * r + 0.578f * g + 0.114f * b;
                 final int index = Math.round(gray * (base.length() + 1) / 255);
                 String s = index >= base.length() ? " " : String.valueOf(base.charAt(index));
-                if (convertRequest.isEnableColor()) {
-                    SpannableString redSpannable = new SpannableString(s);
-                    redSpannable.setSpan(new ForegroundColorSpan(pixel), 0, s.length(), 0);
-                    spannableStringBuilder.append(redSpannable);
-                } else {
-                    spannableStringBuilder.append(s);
-                }
+                colors.add(pixel);
+                stringBuilder.append(s);
             }
-            spannableStringBuilder.append("\n");
+            stringBuilder.append("\n");
+            colors.add(0);
+        }
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder);
+        ForegroundColorSpan colorSpan;
+        for (int i = 0; i < colors.size(); i++) {
+            colorSpan = new ForegroundColorSpan(colors.get(i));
+            spannableStringBuilder.setSpan(colorSpan, i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return textAsBitmap(spannableStringBuilder, convertRequest.getContext());
     }
@@ -103,11 +109,11 @@ public class ImageConverterImpl implements ImageConverter {
     public static Bitmap textAsBitmap(CharSequence text, Context context) {
 
         TextPaint textPaint = new TextPaint();
-        textPaint.setColor(Color.BLACK);
+        textPaint.setColor(Color.GRAY);
         textPaint.setAntiAlias(true);
         textPaint.setTypeface(Typeface.MONOSPACE);
-
         textPaint.setTextSize(12);
+
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
