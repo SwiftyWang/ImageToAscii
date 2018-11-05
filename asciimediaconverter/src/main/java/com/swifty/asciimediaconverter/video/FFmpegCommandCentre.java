@@ -95,7 +95,7 @@ public class FFmpegCommandCentre {
 //            _commands.add("-filter_complex");
 //            _commands.add("[1:v]scale=1920:1080[s];[0:v][s]overlay=0:0");
             _commands.add("-b");
-            _commands.add("1000k");
+            _commands.add("500k");
 //            _commands.add("-s");
 //            _commands.add("640x360");
             _commands.add("-ss");
