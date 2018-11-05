@@ -91,25 +91,36 @@ public class ImageConverterImpl implements ImageConverter {
                 final float gray = 0.299f * r + 0.578f * g + 0.114f * b;
                 final int index = Math.round(gray * (base.length() + 1) / 255);
                 String s = index >= base.length() ? " " : String.valueOf(base.charAt(index));
-                colors.add(pixel);
+                if (convertRequest.isEnableColor()) colors.add(pixel);
                 stringBuilder.append(s);
             }
             stringBuilder.append("\n");
-            colors.add(0);
+            if (convertRequest.isEnableColor()) colors.add(0);
         }
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder);
+
         ForegroundColorSpan colorSpan;
-        for (int i = 0; i < colors.size(); i++) {
-            colorSpan = new ForegroundColorSpan(colors.get(i));
-            spannableStringBuilder.setSpan(colorSpan, i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        CharSequence finalText;
+        if (convertRequest.isEnableColor()) {
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder);
+            for (int i = 0; i < colors.size(); i++) {
+                colorSpan = new ForegroundColorSpan(colors.get(i));
+                spannableStringBuilder.setSpan(colorSpan, i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            finalText = spannableStringBuilder;
+        } else {
+            finalText = stringBuilder;
         }
-        return textAsBitmap(spannableStringBuilder, convertRequest.getContext());
+        return textAsBitmap(finalText, convertRequest.getContext());
     }
 
     public static Bitmap textAsBitmap(CharSequence text, Context context) {
 
         TextPaint textPaint = new TextPaint();
-        textPaint.setColor(Color.GRAY);
+        if (text instanceof Spannable) {
+            textPaint.setColor(Color.TRANSPARENT);
+        } else {
+            textPaint.setColor(Color.GRAY);
+        }
         textPaint.setAntiAlias(true);
         textPaint.setTypeface(Typeface.MONOSPACE);
         textPaint.setTextSize(12);

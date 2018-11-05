@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity {
             ImageMediaConvertRequest.Builder builder = new ImageMediaConvertRequest.Builder(this);
             builder
                     .setFilePath(path)
-                    .setEnableColor(true);
+                    .setEnableColor(aSwitch.isChecked());
             mDisposable.add(imageConverter.convertRx(builder.build())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<ImageConvertResponse>() {
@@ -221,7 +221,7 @@ public class MainActivity extends BaseActivity {
                         }
                         builder
                                 .setFilePath(mediaPath)
-                                .setEnableColor(true)
+                                .setEnableColor(aSwitch.isChecked())
                                 .setDesFolder(AppConfig.BASE_PATH)
                                 .setFps(fps);
                         mDisposable.add(videoConverter.convertRx(builder.build())
