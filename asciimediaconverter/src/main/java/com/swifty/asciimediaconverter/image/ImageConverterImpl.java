@@ -7,8 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Layout;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -24,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class ImageConverterImpl implements ImageConverter {
     @Override
-    public Single<ImageConvertResponse> convertRx(final ImageConvertRequest convertRequest) {
+    public Single<ImageConvertResponse> convertRx(final ImageMediaConvertRequest convertRequest) {
 
         Single<ImageConvertResponse> imageConvertResponseObservable = Single.create(new SingleOnSubscribe<Bitmap>() {
             @Override
@@ -42,14 +45,13 @@ public class ImageConverterImpl implements ImageConverter {
     }
 
     @Override
-    public ImageConvertResponse convertSync(ImageConvertRequest convertRequest) {
+    public ImageConvertResponse convertSync(ImageMediaConvertRequest convertRequest) {
         Bitmap bitmap = convert2Bitmap(convertRequest);
         return new ImageConvertResponse(bitmap);
     }
 
-    private Bitmap convert2Bitmap(ImageConvertRequest convertRequest) {
+    private Bitmap convert2Bitmap(ImageMediaConvertRequest convertRequest) {
         final String base = "#8XOHLTI)i=+;:,.";// 字符串由复杂到简单
-        StringBuilder text = new StringBuilder();
         Bitmap bitmap = convertRequest.getBitmap();
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeFile(convertRequest.getFilePath());  //读取图片
@@ -77,6 +79,7 @@ public class ImageConverterImpl implements ImageConverter {
         bitmap = Bitmap.createScaledBitmap(bitmap, width1, height1, true);
 
         //输出到指定文件中
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         for (int y = 0; y < bitmap.getHeight(); y += 2) {
             for (int x = 0; x < bitmap.getWidth(); x++) {
                 final int pixel = bitmap.getPixel(x, y);
@@ -84,21 +87,23 @@ public class ImageConverterImpl implements ImageConverter {
                 final float gray = 0.299f * r + 0.578f * g + 0.114f * b;
                 final int index = Math.round(gray * (base.length() + 1) / 255);
                 String s = index >= base.length() ? " " : String.valueOf(base.charAt(index));
-                text.append(s);
+                if (convertRequest.isEnableColor()) {
+                    SpannableString redSpannable = new SpannableString(s);
+                    redSpannable.setSpan(new ForegroundColorSpan(pixel), 0, s.length(), 0);
+                    spannableStringBuilder.append(redSpannable);
+                } else {
+                    spannableStringBuilder.append(s);
+                }
             }
-            text.append("\n");
+            spannableStringBuilder.append("\n");
         }
-        return textAsBitmap(text.toString(), convertRequest.getContext());
+        return textAsBitmap(spannableStringBuilder, convertRequest.getContext());
     }
 
-    public static Bitmap textAsBitmap(String text, Context context) {
+    public static Bitmap textAsBitmap(CharSequence text, Context context) {
 
         TextPaint textPaint = new TextPaint();
-
-// textPaint.setARGB(0x31, 0x31, 0x31, 0);
-
         textPaint.setColor(Color.BLACK);
-
         textPaint.setAntiAlias(true);
         textPaint.setTypeface(Typeface.MONOSPACE);
 

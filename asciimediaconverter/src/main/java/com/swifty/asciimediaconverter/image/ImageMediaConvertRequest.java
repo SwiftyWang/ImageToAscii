@@ -3,12 +3,12 @@ package com.swifty.asciimediaconverter.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.swifty.asciimediaconverter.base.ConvertRequest;
+import com.swifty.asciimediaconverter.base.MediaConvertRequest;
 
 /**
  * Created by Swifty Wang on 30/10/2018.
  */
-public final class ImageConvertRequest extends ConvertRequest {
+public final class ImageMediaConvertRequest extends MediaConvertRequest {
 
     private final Context mContext;
 
@@ -17,7 +17,8 @@ public final class ImageConvertRequest extends ConvertRequest {
 
     private Bitmap mBitmap;
 
-    private ImageConvertRequest(Context context) {
+
+    private ImageMediaConvertRequest(Context context) {
         mContext = context;
     }
 
@@ -33,10 +34,10 @@ public final class ImageConvertRequest extends ConvertRequest {
         return mContext;
     }
 
-    public static class Builder extends ConvertRequest.Builder<ImageConvertRequest, Builder> {
+    public static class Builder extends MediaConvertRequest.Builder<ImageMediaConvertRequest, Builder> {
 
         public Builder(Context context) {
-            super(new ImageConvertRequest(context));
+            super(new ImageMediaConvertRequest(context));
         }
 
         public Builder setOriginBitmap(Bitmap bitmap) {

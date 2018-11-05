@@ -7,5 +7,5 @@ import io.reactivex.Observable;
  */
 public interface VideoConverter {
 
-    Observable<VideoConvertResponse> convertRx(VideoConvertRequest convertRequest);
+    Observable<VideoConvertResponse> convertRx(VideoMediaConvertRequest convertRequest);
 }

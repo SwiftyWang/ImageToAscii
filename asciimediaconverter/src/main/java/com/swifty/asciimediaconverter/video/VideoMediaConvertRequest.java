@@ -2,12 +2,12 @@ package com.swifty.asciimediaconverter.video;
 
 import android.content.Context;
 
-import com.swifty.asciimediaconverter.base.ConvertRequest;
+import com.swifty.asciimediaconverter.base.MediaConvertRequest;
 
 /**
  * Created by Swifty Wang on 30/10/2018.
  */
-public class VideoConvertRequest extends ConvertRequest {
+public final class VideoMediaConvertRequest extends MediaConvertRequest {
     private final Context mContext;
     private String mDesFolder;
     private int mFps = 5;
@@ -15,7 +15,7 @@ public class VideoConvertRequest extends ConvertRequest {
     // hardcode it to 7, seems this value cannot be changed.
     private int mSampleSize = 7;
 
-    private VideoConvertRequest(Context context) {
+    private VideoMediaConvertRequest(Context context) {
         mContext = context;
     }
 
@@ -55,10 +55,10 @@ public class VideoConvertRequest extends ConvertRequest {
         }
     }
 
-    public static class Builder extends ConvertRequest.Builder<VideoConvertRequest, Builder> {
+    public static class Builder extends MediaConvertRequest.Builder<VideoMediaConvertRequest, Builder> {
 
         public Builder(Context context) {
-            super(new VideoConvertRequest(context));
+            super(new VideoMediaConvertRequest(context));
         }
 
         public Builder setFps(int fps) {

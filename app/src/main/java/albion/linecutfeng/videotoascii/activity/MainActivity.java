@@ -23,15 +23,15 @@ import android.widget.Toast;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.RxPermissions;
-import com.swifty.asciimediaconverter.image.ImageConvertRequest;
 import com.swifty.asciimediaconverter.image.ImageConvertResponse;
 import com.swifty.asciimediaconverter.image.ImageConverter;
 import com.swifty.asciimediaconverter.image.ImageConverterImpl;
+import com.swifty.asciimediaconverter.image.ImageMediaConvertRequest;
 import com.swifty.asciimediaconverter.video.MediaDecoder;
-import com.swifty.asciimediaconverter.video.VideoConvertRequest;
 import com.swifty.asciimediaconverter.video.VideoConvertResponse;
 import com.swifty.asciimediaconverter.video.VideoConverter;
 import com.swifty.asciimediaconverter.video.VideoConverterImpl;
+import com.swifty.asciimediaconverter.video.VideoMediaConvertRequest;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -149,8 +149,10 @@ public class MainActivity extends BaseActivity {
         if (fileType == FILE_TYPE.pic) {
             if (TextUtils.isEmpty(path)) return;
             ImageConverter imageConverter = new ImageConverterImpl();
-            ImageConvertRequest.Builder builder = new ImageConvertRequest.Builder(this);
-            builder.setFilePath(path);
+            ImageMediaConvertRequest.Builder builder = new ImageMediaConvertRequest.Builder(this);
+            builder
+                    .setFilePath(path)
+                    .setEnableColor(true);
             mDisposable.add(imageConverter.convertRx(builder.build())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<ImageConvertResponse>() {
@@ -205,20 +207,21 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         VideoConverter videoConverter = new VideoConverterImpl();
-                        VideoConvertRequest.Builder builder = new VideoConvertRequest.Builder(MainActivity.this);
+                        VideoMediaConvertRequest.Builder builder = new VideoMediaConvertRequest.Builder(MainActivity.this);
                         switch (videoFormatArray[which]) {
                             case "avi":
-                                builder.setConvertedFileType(VideoConvertRequest.ConvertedFileType.AVI);
+                                builder.setConvertedFileType(VideoMediaConvertRequest.ConvertedFileType.AVI);
                                 break;
                             case "gif":
-                                builder.setConvertedFileType(VideoConvertRequest.ConvertedFileType.GIF);
+                                builder.setConvertedFileType(VideoMediaConvertRequest.ConvertedFileType.GIF);
                                 break;
                             case "mp4":
-                                builder.setConvertedFileType(VideoConvertRequest.ConvertedFileType.MP4);
+                                builder.setConvertedFileType(VideoMediaConvertRequest.ConvertedFileType.MP4);
                                 break;
                         }
                         builder
                                 .setFilePath(mediaPath)
+                                .setEnableColor(true)
                                 .setDesFolder(AppConfig.BASE_PATH)
                                 .setFps(fps);
                         mDisposable.add(videoConverter.convertRx(builder.build())

@@ -5,10 +5,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.swifty.asciimediaconverter.Utils;
-import com.swifty.asciimediaconverter.image.ImageConvertRequest;
 import com.swifty.asciimediaconverter.image.ImageConvertResponse;
 import com.swifty.asciimediaconverter.image.ImageConverter;
 import com.swifty.asciimediaconverter.image.ImageConverterImpl;
+import com.swifty.asciimediaconverter.image.ImageMediaConvertRequest;
 import com.swifty.asciimediaconverter.jni.FFmpegKit;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public class VideoConverterImpl implements VideoConverter {
     private static final String TEMP_IMAGE_PREFIX = ".temp_";
 
     @Override
-    public Observable<VideoConvertResponse> convertRx(final VideoConvertRequest convertRequest) {
+    public Observable<VideoConvertResponse> convertRx(final VideoMediaConvertRequest convertRequest) {
         Observable<VideoConvertResponse> observable = Observable.create(new ObservableOnSubscribe<VideoConvertResponse>() {
             @Override
             public void subscribe(ObservableEmitter<VideoConvertResponse> emitter) throws Exception {
@@ -65,8 +65,10 @@ public class VideoConverterImpl implements VideoConverter {
                     }
                     Log.i("icv", "第" + i + "张转换开始");
                     ImageConverter imageConverter = new ImageConverterImpl();
-                    ImageConvertRequest.Builder builder = new ImageConvertRequest.Builder(context);
-                    builder.setOriginBitmap(bitmap);
+                    ImageMediaConvertRequest.Builder builder = new ImageMediaConvertRequest.Builder(context);
+                    builder
+                            .setOriginBitmap(bitmap)
+                            .setEnableColor(convertRequest.isEnableColor());
                     ImageConvertResponse imageConvertResponse = imageConverter.convertSync(builder.build());
                     Log.i("icv", "第" + i + "张转换结束");
 
@@ -109,7 +111,7 @@ public class VideoConverterImpl implements VideoConverter {
         return FFmpegKit.execute(commands);
     }
 
-    private String generateDesVideoPath(String desFolder, VideoConvertRequest convertRequest) {
+    private String generateDesVideoPath(String desFolder, VideoMediaConvertRequest convertRequest) {
         File file = new File(convertRequest.getFilePath());
         String fileName;
         if (file.exists()) {
