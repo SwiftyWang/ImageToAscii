@@ -9,6 +9,7 @@ import com.swifty.asciimediaconverter.image.ImageConvertRequest;
 import com.swifty.asciimediaconverter.image.ImageConvertResponse;
 import com.swifty.asciimediaconverter.image.ImageConverter;
 import com.swifty.asciimediaconverter.image.ImageConverterImpl;
+import com.swifty.asciimediaconverter.jni.FFmpegKit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
