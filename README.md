@@ -1,4 +1,4 @@
-# This lib is convert an image or video to ascii image/video/gif
+# This lib is converting an image or video to ascii image/video/gif
 ## How to use
 
 ```java  
