@@ -55,7 +55,10 @@ public class VideoConverterImpl implements VideoConverter {
                     }
                 }
                 String tempPicFolder = desFolder + ".pic/";
+                // clear temp folder first
+                Utils.deleteDir(tempPicFolder);
                 Utils.mkdirs(tempPicFolder);
+
                 for (int i = 0; i < encodeTotalCount; i++) {
                     Log.i("icv", "第" + i + "张解码开始");
                     Bitmap bitmap = mediaDecoder.decodeFrame(i * (1000 / fps));
