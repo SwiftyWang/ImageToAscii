@@ -9,7 +9,6 @@ import com.swifty.asciimediaconverter.image.ImageConvertResponse;
 import com.swifty.asciimediaconverter.image.ImageConverter;
 import com.swifty.asciimediaconverter.image.ImageConverterImpl;
 import com.swifty.asciimediaconverter.image.ImageMediaConvertRequest;
-import com.swifty.asciimediaconverter.jni.FFmpegKit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -93,25 +92,25 @@ public class VideoConverterImpl implements VideoConverter {
 
                 // encode images to video
                 String desVideoPath = generateDesVideoPath(desFolder, convertRequest);
-                int result = ffmpegMerge(tempPicFolder + TEMP_IMAGE_PREFIX + "%05d.png", desVideoPath, convertRequest.getFps());
+                boolean success = ffmpegMerge(tempPicFolder + TEMP_IMAGE_PREFIX + "%05d.png", desVideoPath, convertRequest.getFps());
                 Utils.deleteDir(tempPicFolder);
-                if (result == 0) {
+                if (success) {
                     VideoConvertResponse.CompleteModel completeModel = new VideoConvertResponse.CompleteModel();
                     completeModel.filePath = desVideoPath;
                     VideoConvertResponse videoConvertResponse = new VideoConvertResponse(true, 1, null, completeModel);
                     emitter.onNext(videoConvertResponse);
                     emitter.onComplete();
                 } else {
-                    emitter.onError(new RuntimeException("FFmpeg return error with error code:" + result));
+                    emitter.onError(new RuntimeException("FFmpeg return error with error code:" + success));
                 }
             }
         }).subscribeOn(Schedulers.computation());
         return observable;
     }
 
-    private int ffmpegMerge(String picsPath, String desPath, int fps) throws Exception {
-        String[] commands = FFmpegCommandCentre.concatVideo(picsPath, desPath, String.valueOf(fps));
-        return FFmpegKit.execute(commands);
+    private boolean ffmpegMerge(String picsPath, String desPath, int fps) throws Exception {
+        FFmpegHelper fFmpegHelper = new FFmpegHelper();
+        return fFmpegHelper.images2Video(picsPath, desPath, fps, -1, -1, 1);
     }
 
     private String generateDesVideoPath(String desFolder, VideoMediaConvertRequest convertRequest) {
