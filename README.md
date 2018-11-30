@@ -25,6 +25,7 @@ builder
         .setConvertedFileType(VideoConvertRequest.ConvertedFileType.GIF)
         .setFilePath(mediaPath)
         .setDesFolder(AppConfig.BASE_PATH)
+        .setSpeed(1.5f)
         .setEnableColor(true)
         .setFps(fps);
 videoConverter
