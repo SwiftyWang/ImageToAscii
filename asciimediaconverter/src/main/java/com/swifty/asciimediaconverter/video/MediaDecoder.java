@@ -7,11 +7,12 @@ import android.util.Log;
 
 import com.swifty.asciimediaconverter.Utils;
 
+import static com.swifty.asciimediaconverter.Constant.TAG;
+
 /**
  * 预览视频帧
  */
 public class MediaDecoder {
-    private static final String TAG = "MediaDecoder";
     private MediaMetadataRetriever retriever = null;
     private String fileLength;
 
@@ -20,7 +21,7 @@ public class MediaDecoder {
             retriever = new MediaMetadataRetriever();
             retriever.setDataSource(file);
             fileLength = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            Log.i(TAG, "fileLength : " + fileLength);
+            Log.d(TAG, "fileLength : " + fileLength);
         }
     }
 

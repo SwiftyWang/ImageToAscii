@@ -6,12 +6,12 @@ import com.swifty.asciimediaconverter.jni.FFmpegKit;
 
 import java.util.ArrayList;
 
+import static com.swifty.asciimediaconverter.Constant.TAG;
+
 /**
  * Created by Swifty Wang on 27/11/2018.
  */
 class FFmpegHelper {
-
-    private static final String TAG = FFmpegHelper.class.getSimpleName();
 
     boolean images2Video(String imagesPathRex, String outputPath, int fps, int width, int height, float speedX) throws Exception {
         ArrayList<String> _commands = new ArrayList<>();

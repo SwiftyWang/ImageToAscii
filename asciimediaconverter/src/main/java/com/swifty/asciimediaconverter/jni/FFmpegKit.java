@@ -2,6 +2,8 @@ package com.swifty.asciimediaconverter.jni;
 
 import android.util.Log;
 
+import static com.swifty.asciimediaconverter.Constant.TAG;
+
 public class FFmpegKit {
     static {
         System.loadLibrary("ffmpeg");
@@ -10,7 +12,7 @@ public class FFmpegKit {
 
     public static int execute(String[] commands) throws Exception {
         int ret = run(commands);
-        Log.d("FFmpegKit jni return", String.valueOf(ret));
+        Log.d(TAG, String.valueOf(ret));
         return ret;
     }
 

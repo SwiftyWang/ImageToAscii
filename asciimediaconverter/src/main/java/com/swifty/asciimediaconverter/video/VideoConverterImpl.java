@@ -23,11 +23,14 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.swifty.asciimediaconverter.Constant.TAG;
+
 /**
  * Created by Swifty Wang on 30/10/2018.
  */
 public class VideoConverterImpl implements VideoConverter {
-    private static final String TEMP_IMAGE_PREFIX = ".temp_";
+    private static final int MAX_IMAGE_COUNT_NUMBER_OF_DIGITS = 5;
+    private static final String TEMP_IMAGE_NAME = ".temp_%0" + MAX_IMAGE_COUNT_NUMBER_OF_DIGITS + "d.png";
 
     @Override
     public Observable<VideoConvertResponse> convertRx(final VideoMediaConvertRequest convertRequest) {
@@ -57,29 +60,32 @@ public class VideoConverterImpl implements VideoConverter {
                 // clear temp folder first
                 Utils.deleteDir(tempPicFolder);
                 Utils.mkdirs(tempPicFolder);
+                if (String.valueOf(encodeTotalCount).length() > MAX_IMAGE_COUNT_NUMBER_OF_DIGITS) {
+                    throw new IllegalArgumentException("the input video is too long!");
+                }
+
+                // create a ImageConvert for later use
+                ImageConverter imageConverter = new ImageConverterImpl();
 
                 for (int i = 0; i < encodeTotalCount; i++) {
-                    Log.i("icv", "第" + i + "张解码开始");
+                    Log.i(TAG, "start process" + i);
                     Bitmap bitmap = mediaDecoder.decodeFrame(i * (1000 / fps));
-                    Log.i("icv", "第" + i + "张解码结束");
                     if (bitmap == null) {
                         continue;
                     }
-                    Log.i("icv", "第" + i + "张转换开始");
-                    ImageConverter imageConverter = new ImageConverterImpl();
                     ImageMediaConvertRequest.Builder builder = new ImageMediaConvertRequest.Builder(context);
                     builder
                             .setOriginBitmap(bitmap)
                             .setEnableColor(convertRequest.isEnableColor());
                     ImageConvertResponse imageConvertResponse = imageConverter.convertSync(builder.build());
-                    Log.i("icv", "第" + i + "张转换结束");
+                    Log.i(TAG, "end process" + i);
 
                     VideoConvertResponse videoConvertResponse = new VideoConvertResponse(false, (float) ((float) (i + 1) / encodeTotalCount * 0.9), imageConvertResponse.getResponse(), null);
                     emitter.onNext(videoConvertResponse);
                     FileOutputStream fos;
                     try {
-                        String format = String.format(Locale.getDefault(), "%05d", i);
-                        fos = new FileOutputStream(tempPicFolder + TEMP_IMAGE_PREFIX + format + ".png", false);
+                        String formatSuffix = String.format(Locale.getDefault(), TEMP_IMAGE_NAME, i);
+                        fos = new FileOutputStream(tempPicFolder + formatSuffix, false);
                         imageConvertResponse.getResponse().compress(Bitmap.CompressFormat.PNG, 100, fos);
                         fos.flush();
                         fos.close();
@@ -92,7 +98,10 @@ public class VideoConverterImpl implements VideoConverter {
 
                 // encode images to video
                 String desVideoPath = generateDesVideoPath(desFolder, convertRequest);
-                boolean success = ffmpegMerge(tempPicFolder + TEMP_IMAGE_PREFIX + "%05d.png", desVideoPath, convertRequest.getFps());
+                FFmpegHelper fFmpegHelper = new FFmpegHelper();
+                boolean success = fFmpegHelper
+                        .images2Video(tempPicFolder + TEMP_IMAGE_NAME, desVideoPath,
+                                fps, convertRequest.getWidth(), convertRequest.getHeight(), convertRequest.getSpeed());
                 Utils.deleteDir(tempPicFolder);
                 if (success) {
                     VideoConvertResponse.CompleteModel completeModel = new VideoConvertResponse.CompleteModel();

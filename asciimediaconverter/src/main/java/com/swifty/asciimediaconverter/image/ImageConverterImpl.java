@@ -25,6 +25,8 @@ import io.reactivex.SingleOnSubscribe;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.swifty.asciimediaconverter.Constant.TAG;
+
 /**
  * Created by Swifty Wang on 30/10/2018.
  */
@@ -148,9 +150,7 @@ public class ImageConverterImpl implements ImageConverter {
 
         layout.draw(canvas);
 
-        Log.d("textAsBitmap",
-
-                String.format("1:%d %d", layout.getWidth(), layout.getHeight()));
+        Log.d(TAG, String.format("converted image size: %d %d", layout.getWidth(), layout.getHeight()));
 
         return bitmap;
 

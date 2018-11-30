@@ -223,6 +223,7 @@ public class MainActivity extends BaseActivity {
                                 .setFilePath(mediaPath)
                                 .setEnableColor(aSwitch.isChecked())
                                 .setDesFolder(AppConfig.BASE_PATH)
+                                .setSpeed(1.5f)
                                 .setFps(fps);
                         mDisposable.add(videoConverter.convertRx(builder.build())
                                 .observeOn(AndroidSchedulers.mainThread())

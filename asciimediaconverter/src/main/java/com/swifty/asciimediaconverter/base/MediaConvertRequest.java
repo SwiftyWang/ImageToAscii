@@ -1,7 +1,5 @@
 package com.swifty.asciimediaconverter.base;
 
-import com.swifty.asciimediaconverter.image.ImageMediaConvertRequest;
-
 /**
  * Created by Swifty Wang on 30/10/2018.
  */
