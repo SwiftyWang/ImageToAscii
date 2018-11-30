@@ -1,12 +1,13 @@
 # This lib is converting an image or video to ascii image/video/gif
-## How to use
 
-##Demo  
+## The demo result
 
 | Original                              | descriptionOutput                    |
 |---------------------------------------|--------------------------------------|
 | ![original image](./demo/pic-i.jpg)   | ![converted image](./demo/pic-o.jpg) |
 | ![original video](./demo/video-i.gif) | ![converted gif](./demo/video-o.gif) |
+
+## How to use
 
 ```java  
 ImageConverter imageConverter = new ImageConverterImpl();
