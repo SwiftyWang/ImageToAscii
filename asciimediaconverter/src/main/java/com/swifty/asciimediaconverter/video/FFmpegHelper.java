@@ -38,7 +38,7 @@ class FFmpegHelper {
                     .append(" ")
                     .append(commands[i]);
         }
-        Log.d(TAG, "ffmpeg command:" + builder + "-" + commands.length);
+        Log.d(TAG, "ffmpeg command:" + builder);
         int ret = FFmpegKit.execute(commands);
         return ret == 0;
     }
