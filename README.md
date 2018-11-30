@@ -2,10 +2,10 @@
 ## How to use
 
 ##Demo  
-Original                               |   Output
-:-------------------------------------:|:--------------------------------------:
-![original image](./demo/pic-i.jpg)    |![converted image](./demo/pic-o.jpg)
-![original video](./demo/video-i.gif)  |![converted gif](./demo/video-o.gif)
+| Original                              | descriptionOutput                    |
+|---------------------------------------|--------------------------------------|
+| ![original image](./demo/pic-i.jpg)   | ![converted image](./demo/pic-o.jpg) |
+| ![original video](./demo/video-i.gif) | ![converted gif](./demo/video-o.gif) |
 
 ```java  
 ImageConverter imageConverter = new ImageConverterImpl();
