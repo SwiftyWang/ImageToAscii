@@ -2,7 +2,7 @@
 
 ## The demo result
 
-| Original                              | descriptionOutput                    |
+| Original                              | Output                    |
 |---------------------------------------|--------------------------------------|
 | ![original image](./demo/pic-i.jpg)   | ![converted image](./demo/pic-o.jpg) |
 | ![original video](./demo/video-i.gif) | ![converted gif](./demo/video-o.gif) |
